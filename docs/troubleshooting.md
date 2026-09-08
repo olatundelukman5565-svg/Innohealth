@@ -1,5 +1,20 @@
 # Troubleshooting
 
+## `RunThermalMesh.command`/`.sh`/`.bat` does nothing, or `ModuleNotFoundError: No module named 'tkinter'`
+
+The one-click GUI (`scripts/gui.py`) uses Python's built-in `tkinter`
+module. It ships by default with the python.org installers for Mac and
+Windows. On minimal Linux installs it's a separate OS package:
+
+```bash
+sudo apt install python3-tk      # Debian/Ubuntu
+sudo dnf install python3-tkinter # Fedora
+```
+
+macOS may also block the `.command` file as being from an "unidentified
+developer" the first time -- right-click it and choose **Open** once to
+approve it, then double-clicking works normally afterward.
+
 ## `InvalidThermalDataError: Thermal file ... contains N rows but camera
 metadata specifies an image height of M`
 

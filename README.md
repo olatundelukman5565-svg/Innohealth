@@ -12,6 +12,29 @@ model plus fully numerical temperature outputs.
 > against Innohealth's real PLY meshes, thermal exports, or camera
 > hardware -- see [Known limitations](#known-limitations--what-needs-real-data-validation).
 
+## Easiest way to run it (no command line)
+
+1. Download/clone this repository and switch to this branch.
+2. Double-click the launcher for your OS in the repository root:
+   - **Mac**: `RunThermalMesh.command` (first time, you may need to
+     right-click -> Open once if macOS blocks unidentified scripts)
+   - **Windows**: `RunThermalMesh.bat`
+   - **Linux**: `RunThermalMesh.sh`
+3. The first launch installs everything automatically (takes a minute or
+   two); a window opens afterward.
+4. Click **Generate Demo Dataset** to try it immediately with no real data,
+   or use the **Browse...** buttons to point at your own final mesh,
+   thermal data folder, and cameras file.
+5. Click **Run Pipeline** and watch the log. When it finishes, click
+   **Open Output Folder** to see the results (`model.glb`,
+   `quality_report.txt`, temperature CSVs, etc.).
+
+Requires Python 3.11+ installed with the standard `tkinter` GUI module
+(included by default in the python.org Mac/Windows installers; on minimal
+Linux installs, `sudo apt install python3-tk` first).
+
+Prefer the command line? See [Quick start](#quick-start) below.
+
 ## Product overview
 
 Given:
