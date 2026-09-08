@@ -20,7 +20,9 @@ web/frontend/node_modules/
 web/frontend/.next/
 web/frontend/out/
 web/frontend/.env
+web/frontend/.env.local
 web/frontend/next-env.d.ts
+web/frontend/tsconfig.tsbuildinfo
 web/backend/.venv/
 web/backend/storage/
 web/backend/*.db
