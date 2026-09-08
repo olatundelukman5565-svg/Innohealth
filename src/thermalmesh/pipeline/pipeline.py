@@ -7,6 +7,7 @@ directly from Python (Rule 10) -- the CLI is a thin wrapper around this.
 from __future__ import annotations
 
 import logging
+from typing import Callable
 
 from thermalmesh.models.results import PipelineResult
 from thermalmesh.pipeline import stages
@@ -41,10 +42,26 @@ class ThermalMeshPipeline:
     def __init__(self, context: PipelineContext) -> None:
         self.context = context
 
-    def run(self, *, stop_after: str | None = None) -> PipelineResult:
+    def run(
+        self,
+        *,
+        stop_after: str | None = None,
+        on_stage_start: Callable[[str, int, int], None] | None = None,
+        on_stage_complete: Callable[[str, int, int], None] | None = None,
+    ) -> PipelineResult:
+        """Run every stage in order.
+
+        ``on_stage_start``/``on_stage_complete`` are optional callbacks invoked
+        with ``(stage_name, index, total_stages)`` -- used by the web backend
+        to stream live progress without the pipeline knowing anything about
+        HTTP, jobs, or databases.
+        """
         self.context.output_dir.mkdir(parents=True, exist_ok=True)
-        for stage_fn in STAGES:
+        total = len(STAGES)
+        for index, stage_fn in enumerate(STAGES, start=1):
             name = stage_fn.__name__
+            if on_stage_start:
+                on_stage_start(name, index, total)
             try:
                 stage_fn(self.context)
             except ThermalMeshError:
@@ -58,6 +75,8 @@ class ThermalMeshPipeline:
                     recommendation="Inspect the stage traceback above",
                 ) from exc
             self.context.log_stage(f"{name}: OK")
+            if on_stage_complete:
+                on_stage_complete(name, index, total)
             if stop_after and name == stop_after:
                 logger.info("Stopping after stage %s as requested", name)
                 break

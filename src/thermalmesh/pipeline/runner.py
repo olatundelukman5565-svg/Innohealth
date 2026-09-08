@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from typing import Callable
 
 import yaml
 
@@ -40,6 +41,8 @@ def run_pipeline(
     config_path: str | Path | None = None,
     config_overrides: dict | None = None,
     stop_after: str | None = None,
+    on_stage_start: Callable[[str, int, int], None] | None = None,
+    on_stage_complete: Callable[[str, int, int], None] | None = None,
 ) -> PipelineResult:
     config = load_config(config_path)
     if config_overrides:
@@ -54,7 +57,7 @@ def run_pipeline(
         output_dir=Path(output_dir),
     )
     pipeline = ThermalMeshPipeline(context)
-    return pipeline.run(stop_after=stop_after)
+    return pipeline.run(stop_after=stop_after, on_stage_start=on_stage_start, on_stage_complete=on_stage_complete)
 
 
 def _deep_merge(base: dict, overrides: dict) -> dict:

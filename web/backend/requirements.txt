@@ -1,0 +1,15 @@
+fastapi>=0.111
+uvicorn[standard]>=0.30
+sqlalchemy>=2.0
+pydantic>=2.7
+pydantic[email]>=2.7
+pydantic-settings>=2.2
+pyjwt>=2.8
+python-multipart>=0.0.9
+sse-starlette>=2.1
+
+xatlas>=0.0.9
+rtree>=1.0
+
+# The real ThermalMesh processing engine (installed from the repo root).
+-e ../../

@@ -14,3 +14,14 @@ examples/synthetic_dataset/*
 !examples/synthetic_dataset/.gitkeep
 .DS_Store
 *.log
+
+# Web platform
+web/frontend/node_modules/
+web/frontend/.next/
+web/frontend/out/
+web/frontend/.env
+web/frontend/next-env.d.ts
+web/backend/.venv/
+web/backend/storage/
+web/backend/*.db
+web/backend/.env
