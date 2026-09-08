@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thermalmesh"
+version = "0.1.0"
+description = "Innohealth ThermalMesh Pipeline - automated 3D geometry + thermal imaging processing"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "trimesh>=4.0",
+    "opencv-python-headless>=4.9",
+    "pillow>=10.0",
+    "h5py>=3.10",
+    "pyyaml>=6.0",
+    "rtree>=1.0",
+]
+
+[project.optional-dependencies]
+uv = ["xatlas>=0.0.9"]
+dev = ["pytest>=7.4", "pytest-cov>=4.1"]
+
+[project.scripts]
+thermalmesh = "thermalmesh.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

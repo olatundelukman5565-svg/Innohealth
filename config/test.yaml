@@ -1,0 +1,46 @@
+# Configuration for automated tests - minimal resolution / iteration counts
+# for speed, occlusion checking left on for correctness.
+
+mesh:
+  simplify: false
+  target_faces: null
+
+registration:
+  method: auto
+  max_iterations: 30
+  convergence_tolerance: 1.0e-5
+
+camera:
+  estimate_pose: true
+  refine_pose: true
+  use_distortion: false
+
+thermal:
+  unit: celsius
+  interpolation: bilinear
+  delimiter: ","
+  has_header: false
+
+projection:
+  occlusion_check: true
+
+uv:
+  enabled: true
+  resolution: 64
+
+blending:
+  method: weighted
+  distance_weight: true
+  angle_weight: true
+  confidence_weight: true
+
+output:
+  glb: true
+  gltf: true
+  csv: true
+  numpy: true
+  json: true
+  hdf5: true
+
+debug:
+  save_diagnostics: false

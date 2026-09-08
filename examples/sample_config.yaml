@@ -1,0 +1,21 @@
+# Example configuration override -- copy and adjust for a specific run.
+# See config/default.yaml for the full set of options and their defaults.
+
+registration:
+  method: icp
+
+uv:
+  resolution: 1024
+
+blending:
+  distance_weight: true
+  angle_weight: true
+  confidence_weight: true
+
+output:
+  glb: true
+  gltf: false
+  csv: true
+  numpy: true
+  json: true
+  hdf5: true
