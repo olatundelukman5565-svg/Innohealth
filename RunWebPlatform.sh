@@ -22,7 +22,10 @@ cd "$ROOT_DIR/web/backend" || exit 1
 if [ ! -d ".venv" ]; then
   python3 -m venv .venv
   source .venv/bin/activate
-  python3 -m pip install --quiet -r requirements.txt
+  echo "Installing Python dependencies -- this can take a few minutes on first"
+  echo "run (numpy/scipy/opencv are large). You'll see pip's normal output"
+  echo "below; it is NOT frozen even if it pauses for a while between lines."
+  python3 -m pip install -r requirements.txt
   if [ $? -ne 0 ]; then
     echo ""
     echo "Backend dependency installation failed -- see the message above."

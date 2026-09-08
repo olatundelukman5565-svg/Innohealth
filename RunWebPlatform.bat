@@ -23,7 +23,10 @@ cd web\backend
 if not exist ".venv" (
   python -m venv .venv
   call .venv\Scripts\activate.bat
-  python -m pip install --quiet -r requirements.txt
+  echo Installing Python dependencies -- this can take a few minutes on first
+  echo run ^(numpy/scipy/opencv are large^). You will see pip's normal output
+  echo below; it is NOT frozen even if it pauses for a while between lines.
+  python -m pip install -r requirements.txt
   if errorlevel 1 (
     echo.
     echo Backend dependency installation failed -- see the message above.
