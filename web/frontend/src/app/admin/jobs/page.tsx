@@ -29,8 +29,8 @@ export default function AdminJobsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Processing Jobs</h1>
-          <p className="mt-1 text-muted">Every pipeline run, across every project.</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Processing Jobs</h1>
+          <p className="mt-1 text-muted-foreground">Every pipeline run, across every project.</p>
         </div>
         <Select value={status} onValueChange={setStatus}>
           <SelectTrigger className="w-48">
@@ -50,7 +50,7 @@ export default function AdminJobsPage() {
       {isLoading ? (
         <LoadingState label="Loading jobs..." />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border">
+        <div className="overflow-hidden rounded-lg border border-border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -66,15 +66,15 @@ export default function AdminJobsPage() {
               {jobs.map((job) => (
                 <TableRow key={job.id} className="cursor-pointer" onClick={() => setSelected(job)}>
                   <TableCell>{job.project_name}</TableCell>
-                  <TableCell className="text-xs text-muted">{job.current_stage ?? "--"}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">{job.current_stage ?? "--"}</TableCell>
                   <TableCell>
                     <Badge tone={STATUS_TONE[job.status]}>{job.status}</Badge>
                   </TableCell>
                   <TableCell className="w-32">
                     <Progress value={job.progress_percent} />
                   </TableCell>
-                  <TableCell className="text-muted">{job.started_at ? formatDateTime(job.started_at) : "--"}</TableCell>
-                  <TableCell className="font-mono">{job.duration_seconds !== null ? formatDuration(job.duration_seconds) : "--"}</TableCell>
+                  <TableCell className="text-muted-foreground">{job.started_at ? formatDateTime(job.started_at) : "--"}</TableCell>
+                  <TableCell className="tabular-data">{job.duration_seconds !== null ? formatDuration(job.duration_seconds) : "--"}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -91,18 +91,18 @@ export default function AdminJobsPage() {
               </DialogHeader>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted">Status</span>
+                  <span className="text-muted-foreground">Status</span>
                   <Badge tone={STATUS_TONE[selected.status]}>{selected.status}</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted">Current stage</span>
+                  <span className="text-muted-foreground">Current stage</span>
                   <span>{selected.current_stage ?? "--"}</span>
                 </div>
                 {selected.error_message && (
-                  <div className="rounded-lg border border-danger/30 bg-danger/10 p-3">
+                  <div className="rounded-md border border-danger/20 bg-danger-bg p-3">
                     <p className="font-medium text-danger">{selected.error_message}</p>
                     {selected.error_detail && (
-                      <pre className={cn("mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-[10px] text-white/60")}>
+                      <pre className={cn("mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-[10px] text-muted-foreground")}>
                         {selected.error_detail}
                       </pre>
                     )}

@@ -1,15 +1,17 @@
 "use client";
 
+import { Grid, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
 import dynamic from "next/dynamic";
 import { Suspense, useState } from "react";
-import { motion } from "framer-motion";
 
 import { TemperatureLegend } from "@/components/three/TemperatureLegend";
 import { cn } from "@/lib/utils";
 
-const ShowcaseObject = dynamic(() => import("@/components/three/ShowcaseObject").then((m) => m.ShowcaseObject), { ssr: false });
+const ThermalInspectionObject = dynamic(
+  () => import("@/components/three/ThermalInspectionObject").then((m) => m.ThermalInspectionObject),
+  { ssr: false }
+);
 
 const STATS = [
   { label: "Temperature", value: "72.4°C" },
@@ -26,26 +28,33 @@ export function ShowcaseSection() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <div className="mb-10 max-w-2xl">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand">3D + Thermal</p>
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">One interactive model. Full numerical truth underneath.</h2>
-        <p className="mt-4 text-muted">Illustrative preview -- sign in to explore real project data in the full viewer.</p>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-brand">3D + Thermal</p>
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">One interactive model. Full numerical truth underneath.</h2>
+        <p className="mt-4 text-muted-foreground">Illustrative preview -- sign in to explore real project data in the full viewer.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr]">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative h-[420px] overflow-hidden rounded-2xl border border-border bg-black/40"
-        >
-          <Canvas camera={{ position: [0, 0.4, 4.2], fov: 42 }}>
-            <ambientLight intensity={0.6} />
-            <pointLight position={[4, 4, 4]} intensity={30} color="#67e8f9" />
+        <div className="relative h-[420px] overflow-hidden rounded-lg border border-border bg-surface-secondary shadow-card">
+          <Canvas camera={{ position: [2.4, 1.2, 3.2], fov: 40 }}>
+            <ambientLight intensity={0.7} />
+            <directionalLight position={[4, 6, 3]} intensity={1.1} />
+            <directionalLight position={[-4, -2, -3]} intensity={0.3} />
             <Suspense fallback={null}>
-              <ShowcaseObject wireframe={wireframe} />
+              <ThermalInspectionObject wireframe={wireframe} />
+              <Grid
+                position={[0, -1.6, 0]}
+                args={[10, 10]}
+                cellSize={0.5}
+                cellThickness={0.5}
+                cellColor="#d5dae1"
+                sectionSize={2}
+                sectionThickness={0.8}
+                sectionColor="#b7bfc9"
+                fadeDistance={9}
+                infiniteGrid
+              />
             </Suspense>
-            <OrbitControls enableDamping dampingFactor={0.08} autoRotate={false} minDistance={2} maxDistance={7} />
+            <OrbitControls enableDamping dampingFactor={0.08} autoRotate={false} enablePan={false} minDistance={2.2} maxDistance={6} />
           </Canvas>
           <div className="absolute right-4 top-4">
             <TemperatureLegend min={18.2} max={86.7} />
@@ -53,28 +62,22 @@ export function ShowcaseSection() {
           <button
             onClick={() => setWireframe((v) => !v)}
             className={cn(
-              "absolute left-4 top-4 rounded-lg border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-white/70 backdrop-blur-sm transition-colors hover:text-white",
+              "absolute left-4 top-4 rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-muted-foreground shadow-card transition-colors hover:text-foreground",
               wireframe && "border-brand/40 text-brand"
             )}
           >
             {wireframe ? "Thermal view" : "Wireframe"}
           </button>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="glass-panel grid grid-cols-2 gap-6 rounded-2xl p-6"
-        >
+        <div className="grid grid-cols-2 gap-6 rounded-lg border border-border bg-surface p-6 shadow-card">
           {STATS.map((stat) => (
             <div key={stat.label}>
-              <p className="text-xs uppercase tracking-wide text-muted">{stat.label}</p>
-              <p className="mt-1 font-mono text-2xl font-semibold">{stat.value}</p>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">{stat.label}</p>
+              <p className="mt-1 tabular-data text-2xl font-semibold text-foreground">{stat.value}</p>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

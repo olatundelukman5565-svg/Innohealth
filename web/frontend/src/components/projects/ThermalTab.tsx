@@ -14,23 +14,23 @@ export function ThermalTab({ images }: { images: ThermalImage[] }) {
         <Card key={image.id}>
           <CardContent className="space-y-3 p-5">
             <div className="flex items-center justify-between">
-              <p className="font-mono text-sm font-medium">{image.camera_key}</p>
-              <span className="text-xs text-muted">
+              <p className="tabular-data text-sm font-medium">{image.camera_key}</p>
+              <span className="text-xs text-muted-foreground">
                 {image.width}×{image.height}
               </span>
             </div>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div>
-                <p className="text-muted">Valid pixels</p>
-                <p className="font-mono">{formatPercent(image.valid_fraction * 100)}</p>
+                <p className="text-muted-foreground">Valid pixels</p>
+                <p className="tabular-data">{formatPercent(image.valid_fraction * 100)}</p>
               </div>
               <div>
-                <p className="text-muted">Mean temp</p>
-                <p className="font-mono">{formatTemperature(image.mean_temperature)}</p>
+                <p className="text-muted-foreground">Mean temp</p>
+                <p className="tabular-data">{formatTemperature(image.mean_temperature)}</p>
               </div>
               <div className="col-span-2">
-                <p className="text-muted">Range</p>
-                <p className="font-mono">
+                <p className="text-muted-foreground">Range</p>
+                <p className="tabular-data">
                   {formatTemperature(image.min_temperature)} - {formatTemperature(image.max_temperature)}
                 </p>
               </div>

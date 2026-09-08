@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Camera, Combine, Flame, Grid3x3, Layers, Scan, Sigma, Thermometer } from "lucide-react";
 import { useState } from "react";
 
@@ -23,9 +22,9 @@ export function PipelineSection() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <div className="mb-14 max-w-2xl">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand">The Pipeline</p>
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">From raw thermal data to measurable 3D intelligence</h2>
-        <p className="mt-4 text-muted">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-brand">The Pipeline</p>
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">From raw thermal data to measurable 3D intelligence</h2>
+        <p className="mt-4 text-muted-foreground">
           Every stage is a real, independently verifiable step -- not a black box. Hover or tap a stage to see what it does.
         </p>
       </div>
@@ -40,44 +39,31 @@ export function PipelineSection() {
               onMouseEnter={() => setActive(index)}
               onFocus={() => setActive(index)}
               onClick={() => setActive(index)}
-              className="group relative text-left"
+              className="text-left"
             >
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
+              <div
                 className={cn(
-                  "glass-panel flex h-full flex-col gap-3 rounded-xl p-4 transition-all duration-300",
-                  isActive ? "border-brand/40 shadow-glow" : "hover:border-white/20"
+                  "flex h-full flex-col gap-3 rounded-lg border p-4 transition-colors",
+                  isActive ? "border-brand bg-brand-muted" : "border-border bg-surface hover:border-brand/40"
                 )}
               >
-                <div className={cn("flex h-9 w-9 items-center justify-center rounded-lg border", isActive ? "border-brand/40 bg-brand/10 text-brand" : "border-white/10 text-muted")}>
+                <div className={cn("flex h-9 w-9 items-center justify-center rounded-md border", isActive ? "border-brand/30 bg-surface text-brand" : "border-border text-muted-foreground")}>
                   <Icon className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-mono text-muted">{String(index + 1).padStart(2, "0")}</p>
-                  <p className="text-sm font-medium leading-tight">{stage.title}</p>
+                  <p className="tabular-data text-[10px] text-muted-foreground">{String(index + 1).padStart(2, "0")}</p>
+                  <p className="text-sm font-medium leading-tight text-foreground">{stage.title}</p>
                 </div>
-              </motion.div>
-              {index < STAGES.length - 1 && (
-                <div className="pointer-events-none absolute right-[-10px] top-1/2 hidden h-px w-5 -translate-y-1/2 bg-gradient-to-r from-white/20 to-transparent sm:block" />
-              )}
+              </div>
             </button>
           );
         })}
       </div>
 
-      <motion.div
-        key={active}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="glass-panel mt-6 rounded-xl p-6"
-      >
+      <div className="mt-6 rounded-lg border border-border bg-surface p-6 shadow-card">
         <p className="text-sm font-medium text-brand">{STAGES[active].title}</p>
-        <p className="mt-2 max-w-2xl text-sm text-muted">{STAGES[active].detail}</p>
-      </motion.div>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{STAGES[active].detail}</p>
+      </div>
     </section>
   );
 }

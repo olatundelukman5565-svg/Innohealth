@@ -5,22 +5,22 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-40",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-40",
   {
     variants: {
       variant: {
-        default: "bg-brand text-brand-foreground hover:brightness-110 shadow-[0_0_0_1px_rgba(255,255,255,0.06)]",
-        secondary: "bg-surface-elevated text-foreground border border-border hover:bg-white/[0.06]",
-        ghost: "text-foreground hover:bg-white/[0.06]",
-        outline: "border border-border text-foreground hover:bg-white/[0.06]",
-        danger: "bg-danger/90 text-white hover:bg-danger",
+        default: "bg-brand text-brand-foreground hover:bg-brand/90",
+        secondary: "bg-surface text-foreground border border-border hover:bg-surface-secondary",
+        ghost: "text-foreground hover:bg-surface-secondary",
+        outline: "border border-border bg-transparent text-foreground hover:bg-surface-secondary",
+        danger: "bg-danger text-white hover:bg-danger/90",
         link: "text-brand underline-offset-4 hover:underline p-0 h-auto",
       },
       size: {
-        default: "h-10 px-4",
+        default: "h-9 px-4",
         sm: "h-8 px-3 text-xs",
-        lg: "h-12 px-6 text-base",
-        icon: "h-10 w-10",
+        lg: "h-10 px-6 text-base",
+        icon: "h-9 w-9",
       },
     },
     defaultVariants: { variant: "default", size: "default" },

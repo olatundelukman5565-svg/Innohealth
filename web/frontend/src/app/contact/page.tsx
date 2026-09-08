@@ -38,12 +38,12 @@ export default function ContactPage() {
         <PageHero eyebrow="Contact" title="Talk to the Innohealth team" description="Questions about the platform, the engine, or your data? Reach out below." />
         <section className="mx-auto max-w-lg px-6 py-16">
           {sent ? (
-            <div className="glass-panel rounded-2xl p-8 text-center">
-              <p className="text-lg font-medium">Message received</p>
-              <p className="mt-2 text-sm text-muted">An administrator will follow up with you shortly.</p>
+            <div className="rounded-lg border border-border bg-surface p-8 text-center shadow-card">
+              <p className="text-lg font-medium text-foreground">Message received</p>
+              <p className="mt-2 text-sm text-muted-foreground">An administrator will follow up with you shortly.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="glass-panel space-y-4 rounded-2xl p-8">
+            <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-border bg-surface p-8 shadow-card">
               <div className="space-y-1.5">
                 <Label htmlFor="full_name">Full name</Label>
                 <Input id="full_name" required value={fullName} onChange={(e) => setFullName(e.target.value)} />

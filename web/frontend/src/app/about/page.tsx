@@ -20,7 +20,7 @@ export default function AboutPage() {
           title="Precision thermal intelligence, built for real workflows"
           description="Innohealth builds tools that treat raw measurement data as the product -- not just a pretty visualization."
         />
-        <section className="mx-auto max-w-3xl space-y-6 px-6 py-16 text-muted">
+        <section className="mx-auto max-w-3xl space-y-6 px-6 py-16 text-muted-foreground">
           <p>
             ThermalMesh grew out of a simple frustration: thermal imaging and 3D reconstruction are usually treated as separate
             disciplines, forcing teams to manually reconcile temperature data with geometry after the fact.

@@ -1,55 +1,69 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useMemo } from "react";
-import { ArrowUpRight, FolderKanban, Gauge, Layers, Plus } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Activity, CheckCircle2, FolderKanban, Gauge, Plus } from "lucide-react";
 
-import { ProjectCard } from "@/components/projects/ProjectCard";
-import { StatusBadge } from "@/components/projects/StatusBadge";
+import { ProjectsTable } from "@/components/projects/ProjectsTable";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState, LoadingState } from "@/components/ui/states";
-import { useProjectResults, useProjects } from "@/hooks/use-projects";
+import { useProjects } from "@/hooks/use-projects";
 import { useAuth } from "@/lib/auth-context";
-import { formatPercent, formatTemperature } from "@/lib/utils";
-import * as projectsApi from "@/lib/api/projects";
-
-const ThermalMeshViewer = dynamic(() => import("@/components/three/ThermalMeshViewer").then((m) => m.ThermalMeshViewer), {
-  ssr: false,
-  loading: () => <LoadingState label="Loading 3D preview..." />,
-});
-
-function greeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
-}
+import { CHART_ACCENT, CHART_AXIS_TICK, CHART_DANGER, CHART_GRID_STROKE, CHART_NEUTRAL, CHART_TOOLTIP_STYLE, CHART_WARNING } from "@/lib/chart-theme";
+import { formatPercent } from "@/lib/utils";
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const { data: projects = [], isLoading } = useProjects();
 
-  const latest = useMemo(() => projects.find((p) => p.has_result) ?? projects[0], [projects]);
-  const { data: results } = useProjectResults(latest?.id ?? "", Boolean(latest?.has_result));
-
   const active = projects.filter((p) => ["QUEUED", "PROCESSING", "UPLOADING", "VALIDATING"].includes(p.status)).length;
   const completed = projects.filter((p) => p.status === "COMPLETED").length;
-  const avgCoverage =
-    projects.filter((p) => p.coverage_percent !== null).reduce((sum, p) => sum + (p.coverage_percent ?? 0), 0) /
-    (projects.filter((p) => p.coverage_percent !== null).length || 1);
+  const withCoverage = projects.filter((p) => p.coverage_percent !== null);
+  const avgCoverage = withCoverage.reduce((sum, p) => sum + (p.coverage_percent ?? 0), 0) / (withCoverage.length || 1);
+
+  const statusBreakdown = useMemo(() => {
+    const failed = projects.filter((p) => p.status === "FAILED").length;
+    return [
+      { status: "Completed", count: completed, color: CHART_ACCENT },
+      { status: "Processing", count: active, color: CHART_WARNING },
+      { status: "Failed", count: failed, color: CHART_DANGER },
+    ];
+  }, [projects, completed, active]);
+
+  const coverageByProject = useMemo(
+    () =>
+      projects
+        .filter((p) => p.coverage_percent !== null)
+        .slice(0, 8)
+        .map((p) => ({ name: p.name.length > 14 ? `${p.name.slice(0, 14)}…` : p.name, coverage: Number((p.coverage_percent ?? 0).toFixed(1)) })),
+    [projects]
+  );
+
+  const temperatureRangeByProject = useMemo(
+    () =>
+      projects
+        .filter((p) => p.min_temperature !== null && p.max_temperature !== null)
+        .slice(0, 8)
+        .map((p) => ({
+          name: p.name.length > 14 ? `${p.name.slice(0, 14)}…` : p.name,
+          min: Number((p.min_temperature ?? 0).toFixed(1)),
+          range: Number(((p.max_temperature ?? 0) - (p.min_temperature ?? 0)).toFixed(1)),
+        })),
+    [projects]
+  );
 
   if (isLoading) return <LoadingState label="Loading your workspace..." />;
 
+  const recentProjects = [...projects].sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()).slice(0, 5);
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">
-            {greeting()}, {user?.full_name.split(" ")[0]}
-          </h1>
-          <p className="mt-1 text-muted">Here&apos;s your thermal intelligence overview.</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Dashboard</h1>
+          <p className="mt-1 text-muted-foreground">Overview of your thermal mesh processing projects.</p>
         </div>
         <Button asChild>
           <Link href="/projects/new">
@@ -58,123 +72,115 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]">
-        <div className="h-[420px]">
-          {latest?.has_result ? (
-            <ThermalMeshViewer
-              projectId={latest.id}
-              modelUrl={results?.model_url ? projectsApi.getModelUrl(latest.id) : null}
-              cameras={[]}
-              minTemperature={results?.min_temperature ?? latest.min_temperature}
-              maxTemperature={results?.max_temperature ?? latest.max_temperature}
-            />
-          ) : (
-            <Card className="flex h-full items-center justify-center">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <KpiCard icon={FolderKanban} label="Projects" value={projects.length} />
+        <KpiCard icon={Activity} label="Processing Jobs" value={active} />
+        <KpiCard icon={CheckCircle2} label="Completed Analyses" value={completed} />
+        <KpiCard icon={Gauge} label="Thermal Coverage" value={formatPercent(avgCoverage)} />
+      </div>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Recent Projects</CardTitle>
+          <Link href="/projects" className="text-sm text-brand hover:underline">
+            View all
+          </Link>
+        </CardHeader>
+        <CardContent className="p-0">
+          {recentProjects.length === 0 ? (
+            <div className="p-5">
               <EmptyState
-                icon={<Layers className="h-8 w-8 text-muted" />}
-                title="No processed projects yet"
-                description="Create a project and run the pipeline to see your latest 3D thermal reconstruction here."
+                title="No thermal projects have been created."
+                description="Every scan you process will show up here."
                 action={
                   <Button asChild size="sm">
                     <Link href="/projects/new">Create your first project</Link>
                   </Button>
                 }
               />
-            </Card>
+            </div>
+          ) : (
+            <ProjectsTable projects={recentProjects} variant="dashboard" />
           )}
-        </div>
+        </CardContent>
+      </Card>
 
-        <div className="space-y-4">
-          <Card>
-            <CardContent className="space-y-4 p-5">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted">Latest Project</p>
-              {latest ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Link href={`/projects/${latest.id}`} className="font-medium hover:text-brand">
-                      {latest.name}
-                    </Link>
-                    <StatusBadge status={latest.status} />
-                  </div>
-                  {results && (
-                    <div className="grid grid-cols-2 gap-3 border-t border-border pt-3 text-sm">
-                      <div>
-                        <p className="text-xs text-muted">Coverage</p>
-                        <p className="font-mono font-medium">{formatPercent(results.coverage_percent)}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted">Views</p>
-                        <p className="font-mono font-medium">{results.num_views}</p>
-                      </div>
-                      <div className="col-span-2">
-                        <p className="text-xs text-muted">Temperature range</p>
-                        <p className="font-mono font-medium">
-                          {formatTemperature(results.min_temperature)} - {formatTemperature(results.max_temperature)}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <p className="text-sm text-muted">No projects yet.</p>
-              )}
-            </CardContent>
-          </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Processing Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={statusBreakdown}>
+              <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID_STROKE} vertical={false} />
+              <XAxis dataKey="status" tick={CHART_AXIS_TICK} axisLine={{ stroke: CHART_GRID_STROKE }} tickLine={false} />
+              <YAxis tick={CHART_AXIS_TICK} allowDecimals={false} axisLine={false} tickLine={false} />
+              <Tooltip contentStyle={CHART_TOOLTIP_STYLE} cursor={{ fill: "rgba(15,23,42,0.03)" }} />
+              <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                {statusBreakdown.map((entry) => (
+                  <Cell key={entry.status} fill={entry.color} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
 
-          <div className="grid grid-cols-3 gap-3">
-            <StatTile icon={FolderKanban} label="Projects" value={projects.length} />
-            <StatTile icon={Gauge} label="Active" value={active} />
-            <StatTile icon={Layers} label="Completed" value={completed} />
-          </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Thermal Coverage by Project</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {coverageByProject.length === 0 ? (
+              <p className="py-10 text-center text-sm text-muted-foreground">No processed projects yet.</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={coverageByProject}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID_STROKE} vertical={false} />
+                  <XAxis dataKey="name" tick={CHART_AXIS_TICK} axisLine={{ stroke: CHART_GRID_STROKE }} tickLine={false} interval={0} angle={-20} textAnchor="end" height={50} />
+                  <YAxis tick={CHART_AXIS_TICK} unit="%" axisLine={false} tickLine={false} domain={[0, 100]} />
+                  <Tooltip contentStyle={CHART_TOOLTIP_STYLE} cursor={{ fill: "rgba(15,23,42,0.03)" }} formatter={(v: number) => `${v}%`} />
+                  <Bar dataKey="coverage" fill={CHART_ACCENT} radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardContent className="p-5">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted">Average Thermal Coverage</p>
-              <p className="mt-2 font-mono text-3xl font-semibold">{formatPercent(avgCoverage)}</p>
-              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/[0.06]">
-                <div className="h-full bg-brand-gradient" style={{ width: `${Math.min(avgCoverage, 100)}%` }} />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      <div>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Recent Projects</h2>
-          <Link href="/projects" className="flex items-center gap-1 text-sm text-brand hover:underline">
-            View all <ArrowUpRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-        {projects.length === 0 ? (
-          <EmptyState
-            title="No thermal projects have been created."
-            description="Every scan you process will show up here."
-            action={
-              <Button asChild size="sm">
-                <Link href="/projects/new">Create your first project</Link>
-              </Button>
-            }
-          />
-        ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.slice(0, 6).map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
-        )}
+        <Card>
+          <CardHeader>
+            <CardTitle>Temperature Range by Project</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {temperatureRangeByProject.length === 0 ? (
+              <p className="py-10 text-center text-sm text-muted-foreground">No processed projects yet.</p>
+            ) : (
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={temperatureRangeByProject}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID_STROKE} vertical={false} />
+                  <XAxis dataKey="name" tick={CHART_AXIS_TICK} axisLine={{ stroke: CHART_GRID_STROKE }} tickLine={false} interval={0} angle={-20} textAnchor="end" height={50} />
+                  <YAxis tick={CHART_AXIS_TICK} unit="°C" axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={CHART_TOOLTIP_STYLE} cursor={{ fill: "rgba(15,23,42,0.03)" }} />
+                  <Bar dataKey="min" stackId="range" fill="transparent" legendType="none" />
+                  <Bar dataKey="range" stackId="range" fill={CHART_NEUTRAL} radius={[4, 4, 0, 0]} name="Range above min (°C)" />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 }
 
-function StatTile({ icon: Icon, label, value }: { icon: typeof FolderKanban; label: string; value: number }) {
+function KpiCard({ icon: Icon, label, value }: { icon: typeof FolderKanban; label: string; value: number | string }) {
   return (
     <Card>
       <CardContent className="p-4">
         <Icon className="mb-2 h-4 w-4 text-brand" />
-        <p className="font-mono text-xl font-semibold">{value}</p>
-        <p className="text-xs text-muted">{label}</p>
+        <p className="tabular-data text-xl font-semibold text-foreground">{value}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
       </CardContent>
     </Card>
   );

@@ -22,7 +22,7 @@ export function Logo({ className, showWordmark = true }: { className?: string; s
       </svg>
       {showWordmark && (
         <span className="text-sm font-semibold tracking-tight text-foreground">
-          Innohealth <span className="text-muted font-normal">ThermalMesh</span>
+          Innohealth <span className="text-muted-foreground font-normal">ThermalMesh</span>
         </span>
       )}
     </div>

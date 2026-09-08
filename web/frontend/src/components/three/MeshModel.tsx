@@ -40,7 +40,7 @@ export function MeshModel({ url, displayMode, onPick }: MeshModelProps) {
   if (displayMode === "pointcloud") {
     return (
       <points geometry={geometry} onClick={handleClick}>
-        <pointsMaterial size={0.012} color="#22d3ee" sizeAttenuation />
+        <pointsMaterial size={0.012} color="#1d4ed8" sizeAttenuation />
       </points>
     );
   }
@@ -50,7 +50,7 @@ export function MeshModel({ url, displayMode, onPick }: MeshModelProps) {
       {displayMode === "thermal" && texture && <meshStandardMaterial map={texture} roughness={0.6} metalness={0.05} />}
       {displayMode === "thermal" && !texture && <meshStandardMaterial color="#64748b" roughness={0.6} />}
       {displayMode === "solid" && <meshStandardMaterial color="#94a3b8" roughness={0.5} metalness={0.1} />}
-      {displayMode === "wireframe" && <meshBasicMaterial color="#22d3ee" wireframe />}
+      {displayMode === "wireframe" && <meshBasicMaterial color="#475569" wireframe />}
       {displayMode === "normals" && <meshNormalMaterial />}
     </mesh>
   );

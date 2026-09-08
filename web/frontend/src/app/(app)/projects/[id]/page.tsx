@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MoreVertical, Play, Trash2 } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
@@ -34,9 +34,14 @@ const ThermalMeshViewer = dynamic(() => import("@/components/three/ThermalMeshVi
   loading: () => <LoadingState label="Loading 3D viewer..." />,
 });
 
+const TABS = ["overview", "viewer", "thermal", "cameras", "temperature", "reports", "data"] as const;
+
 export default function ProjectDetailPage({ params }: { params: { id: string } }) {
   const { id } = params;
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedTab = searchParams.get("tab");
+  const defaultTab = TABS.includes(requestedTab as (typeof TABS)[number]) ? (requestedTab as (typeof TABS)[number]) : "overview";
   const { data: project, isLoading, error } = useProject(id);
   const { data: results } = useProjectResults(id, project?.has_result);
   const { data: cameras = [] } = useProjectCameras(id, project?.has_result);
@@ -69,10 +74,10 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold">{project.name}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground">{project.name}</h1>
             <StatusBadge status={project.status} />
           </div>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-1 text-sm text-muted-foreground">
             {project.last_processed_at ? `Last processed ${formatDateTime(project.last_processed_at)}` : "Not processed yet"}
           </p>
         </div>
@@ -83,7 +88,12 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
             </Button>
           ) : (
             <Button onClick={handleStart}>
-              <Play className="h-4 w-4" /> {project.has_result ? "Reprocess" : "Start Processing"}
+              <Play className="h-4 w-4" /> {project.has_result ? "Reprocess" : "Process"}
+            </Button>
+          )}
+          {project.has_result && (
+            <Button asChild variant="secondary">
+              <Link href={`/projects/${id}?tab=viewer`}>Open 3D Viewer</Link>
             </Button>
           )}
           <DropdownMenu.Root>
@@ -93,10 +103,10 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
               </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
-              <DropdownMenu.Content align="end" className="glass-panel z-50 min-w-40 rounded-lg p-1 shadow-panel">
+              <DropdownMenu.Content align="end" className="z-50 min-w-40 rounded-md border border-border bg-surface p-1 shadow-popover">
                 <DropdownMenu.Item
                   onSelect={handleDelete}
-                  className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm text-danger hover:bg-danger/10"
+                  className="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-danger hover:bg-danger-bg"
                 >
                   <Trash2 className="h-3.5 w-3.5" /> Delete project
                 </DropdownMenu.Item>
@@ -106,7 +116,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         </div>
       </div>
 
-      <Tabs defaultValue="overview">
+      <Tabs defaultValue={defaultTab} key={defaultTab}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="viewer">3D Viewer</TabsTrigger>
@@ -118,16 +128,18 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
         </TabsList>
 
         <TabsContent value="overview">
-          <OverviewTab project={project} results={results} />
+          <OverviewTab project={project} results={results} cameras={cameras} />
         </TabsContent>
         <TabsContent value="viewer">
-          <div className="h-[560px]">
+          <div className="h-[600px]">
             <ThermalMeshViewer
               projectId={id}
               modelUrl={results?.model_url ? projectsApi.getModelUrl(id) : null}
               cameras={cameras}
               minTemperature={results?.min_temperature ?? null}
               maxTemperature={results?.max_temperature ?? null}
+              variant="full"
+              results={results}
             />
           </div>
         </TabsContent>
@@ -138,7 +150,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
           <CamerasTab cameras={cameras} />
         </TabsContent>
         <TabsContent value="temperature">
-          {project.has_result ? <TemperatureTab projectId={id} /> : <p className="text-sm text-muted">Not available yet.</p>}
+          {project.has_result ? <TemperatureTab projectId={id} /> : <p className="text-sm text-muted-foreground">Not available yet.</p>}
         </TabsContent>
         <TabsContent value="reports">
           <ReportsTab reports={reports} />

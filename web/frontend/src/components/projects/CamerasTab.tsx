@@ -33,13 +33,13 @@ export function CamerasTab({ cameras }: { cameras: Camera[] }) {
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.2fr]">
-      <div className="h-80 overflow-hidden rounded-2xl border border-border bg-black/40">
+      <div className="h-80 overflow-hidden rounded-lg border border-border bg-surface-secondary">
         <Canvas camera={{ position: [0, maxDistance * 0.4, maxDistance * 1.4], fov: 45, far: maxDistance * 10 }}>
           <ambientLight intensity={0.7} />
           <directionalLight position={[maxDistance, maxDistance, maxDistance]} intensity={0.6} />
           <mesh>
             <sphereGeometry args={[maxDistance * 0.15, 24, 24]} />
-            <meshStandardMaterial color="#334155" wireframe />
+            <meshStandardMaterial color="#94a3b8" wireframe />
           </mesh>
           <Suspense fallback={null}>
             <CameraMarkers cameras={cameras} selectedId={selected} onSelect={(c) => setSelected(c.id)} showFrustums scale={maxDistance * 0.3} />
@@ -48,7 +48,7 @@ export function CamerasTab({ cameras }: { cameras: Camera[] }) {
         </Canvas>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border">
+      <div className="overflow-hidden rounded-lg border border-border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -64,15 +64,15 @@ export function CamerasTab({ cameras }: { cameras: Camera[] }) {
               <TableRow
                 key={camera.id}
                 onClick={() => setSelected(camera.id)}
-                className={cn("cursor-pointer", selected === camera.id && "bg-white/[0.05]")}
+                className={cn("cursor-pointer", selected === camera.id && "bg-brand-muted")}
               >
-                <TableCell className="font-mono">{camera.camera_key}</TableCell>
+                <TableCell className="tabular-data">{camera.camera_key}</TableCell>
                 <TableCell>
                   <Badge tone={POSE_TONE[camera.pose_source]}>{camera.pose_source}</Badge>
                 </TableCell>
-                <TableCell className="font-mono">{(camera.confidence * 100).toFixed(0)}%</TableCell>
-                <TableCell className="font-mono">{camera.reprojection_error !== null ? camera.reprojection_error.toFixed(3) : "--"}</TableCell>
-                <TableCell className="font-mono">{camera.coverage_percent.toFixed(1)}%</TableCell>
+                <TableCell className="tabular-data">{(camera.confidence * 100).toFixed(0)}%</TableCell>
+                <TableCell className="tabular-data">{camera.reprojection_error !== null ? camera.reprojection_error.toFixed(3) : "--"}</TableCell>
+                <TableCell className="tabular-data">{camera.coverage_percent.toFixed(1)}%</TableCell>
               </TableRow>
             ))}
           </TableBody>

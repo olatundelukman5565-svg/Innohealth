@@ -41,8 +41,8 @@ export default function AdminUsersPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Users</h1>
-          <p className="mt-1 text-muted">Manage platform access and roles.</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Users</h1>
+          <p className="mt-1 text-muted-foreground">Manage platform access and roles.</p>
         </div>
         <Button onClick={() => setDialogOpen(true)}>
           <Plus className="h-4 w-4" /> Create User
@@ -54,7 +54,7 @@ export default function AdminUsersPage() {
       {isLoading ? (
         <LoadingState label="Loading users..." />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border">
+        <div className="overflow-hidden rounded-lg border border-border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -71,15 +71,15 @@ export default function AdminUsersPage() {
               {users.map((u) => (
                 <TableRow key={u.id}>
                   <TableCell>{u.full_name}</TableCell>
-                  <TableCell className="text-muted">{u.email}</TableCell>
+                  <TableCell className="text-muted-foreground">{u.email}</TableCell>
                   <TableCell>
                     <Badge tone={u.role === "ADMIN" ? "info" : "neutral"}>{u.role}</Badge>
                   </TableCell>
-                  <TableCell className="font-mono">{u.project_count}</TableCell>
+                  <TableCell className="tabular-data">{u.project_count}</TableCell>
                   <TableCell>
                     <Badge tone={u.is_active ? "success" : "danger"}>{u.is_active ? "Active" : "Disabled"}</Badge>
                   </TableCell>
-                  <TableCell className="text-muted">{formatDate(u.created_at)}</TableCell>
+                  <TableCell className="text-muted-foreground">{formatDate(u.created_at)}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button

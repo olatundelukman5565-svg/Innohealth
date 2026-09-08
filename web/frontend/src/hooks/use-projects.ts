@@ -28,6 +28,18 @@ export function useDeleteProject() {
   });
 }
 
+export function useUpdateProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: Partial<{ name: string; description: string }> }) =>
+      projectsApi.updateProject(id, payload),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project", id] });
+    },
+  });
+}
+
 export function useProjectFiles(projectId: string) {
   return useQuery({ queryKey: ["project-files", projectId], queryFn: () => projectsApi.listFiles(projectId), enabled: Boolean(projectId) });
 }

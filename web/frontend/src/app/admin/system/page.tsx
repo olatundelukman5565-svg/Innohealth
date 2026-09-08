@@ -21,8 +21,8 @@ export default function AdminSystemPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">System Health</h1>
-        <p className="mt-1 text-muted">Last checked {formatDateTime(data.checked_at)}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">System Health</h1>
+        <p className="mt-1 text-muted-foreground">Last checked {formatDateTime(data.checked_at)}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -35,7 +35,7 @@ export default function AdminSystemPage() {
                 <Icon className={cn("h-6 w-6", style.color)} />
                 <div>
                   <p className="font-medium">{component.name}</p>
-                  <p className="text-xs text-muted">{component.detail}</p>
+                  <p className="text-xs text-muted-foreground">{component.detail}</p>
                 </div>
                 <span className={cn("ml-auto text-xs font-medium uppercase", style.color)}>{component.status}</span>
               </CardContent>

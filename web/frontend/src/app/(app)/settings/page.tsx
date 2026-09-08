@@ -52,7 +52,7 @@ export default function SettingsPage() {
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
         <h1 className="text-2xl font-semibold">Settings</h1>
-        <p className="mt-1 text-muted">Manage your profile and account security.</p>
+        <p className="mt-1 text-muted-foreground">Manage your profile and account security.</p>
       </div>
 
       <Card>
@@ -105,7 +105,7 @@ export default function SettingsPage() {
           <CardDescription>Display and notification preferences.</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted">Preference controls are not yet configurable in this version.</p>
+          <p className="text-sm text-muted-foreground">Preference controls are not yet configurable in this version.</p>
         </CardContent>
       </Card>
     </div>

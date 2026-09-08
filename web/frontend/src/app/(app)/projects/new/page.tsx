@@ -80,7 +80,7 @@ export default function NewProjectPage() {
     <div className="mx-auto max-w-2xl space-y-8">
       <div>
         <h1 className="text-2xl font-semibold">New Project</h1>
-        <p className="mt-1 text-muted">Set up a thermal-mapped 3D reconstruction in a few steps.</p>
+        <p className="mt-1 text-muted-foreground">Set up a thermal-mapped 3D reconstruction in a few steps.</p>
       </div>
 
       <ol className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export default function NewProjectPage() {
                 "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-medium",
                 index < step && "border-brand bg-brand text-brand-foreground",
                 index === step && "border-brand text-brand",
-                index > step && "border-border text-muted"
+                index > step && "border-border text-muted-foreground"
               )}
             >
               {index < step ? <Check className="h-3.5 w-3.5" /> : index + 1}
@@ -100,9 +100,9 @@ export default function NewProjectPage() {
           </li>
         ))}
       </ol>
-      <p className="-mt-4 text-sm font-medium text-muted">{STEPS[step]}</p>
+      <p className="-mt-4 text-sm font-medium text-muted-foreground">{STEPS[step]}</p>
 
-      <div className="glass-panel rounded-2xl p-6">
+      <div className="rounded-lg border border-border bg-surface p-6 shadow-card">
         {step === 0 && (
           <div className="space-y-4">
             <div className="space-y-1.5">
@@ -120,7 +120,7 @@ export default function NewProjectPage() {
           <div className="space-y-6">
             <div>
               <p className="mb-2 text-sm font-medium">Final reconstructed mesh (required)</p>
-              <p className="mb-3 text-xs text-muted">The final PLY mesh your thermal data will be mapped onto.</p>
+              <p className="mb-3 text-xs text-muted-foreground">The final PLY mesh your thermal data will be mapped onto.</p>
               <UploadZone
                 label="Drop final PLY mesh here"
                 hint=".ply files only"
@@ -132,7 +132,7 @@ export default function NewProjectPage() {
             </div>
             <div>
               <p className="mb-2 text-sm font-medium">Initial acquisition mesh (optional)</p>
-              <p className="mb-3 text-xs text-muted">Used to automatically align if it&apos;s in a different coordinate space than the final mesh.</p>
+              <p className="mb-3 text-xs text-muted-foreground">Used to automatically align if it&apos;s in a different coordinate space than the final mesh.</p>
               <UploadZone
                 label="Drop initial mesh/point cloud here"
                 hint=".ply files only"
@@ -148,7 +148,7 @@ export default function NewProjectPage() {
         {step === 2 && (
           <div>
             <p className="mb-2 text-sm font-medium">Thermal data (required)</p>
-            <p className="mb-3 text-xs text-muted">One raw temperature file per camera view -- CSV or numeric text.</p>
+            <p className="mb-3 text-xs text-muted-foreground">One raw temperature file per camera view -- CSV or numeric text.</p>
             <UploadZone
               label="Drop thermal data files here"
               hint="CSV or numeric files, one per camera view"
@@ -164,7 +164,7 @@ export default function NewProjectPage() {
         {step === 3 && (
           <div>
             <p className="mb-2 text-sm font-medium">Camera metadata (required)</p>
-            <p className="mb-3 text-xs text-muted">Camera locations for every view -- orientation is estimated automatically if not provided.</p>
+            <p className="mb-3 text-xs text-muted-foreground">Camera locations for every view -- orientation is estimated automatically if not provided.</p>
             <UploadZone
               label="Drop camera metadata here"
               hint="JSON or CSV"
@@ -180,17 +180,17 @@ export default function NewProjectPage() {
           <div className="space-y-4">
             <p className="text-sm font-medium">Review</p>
             <div className="rounded-lg border border-border">
-              {uploadedFiles.length === 0 && <p className="p-4 text-sm text-muted">No files uploaded yet.</p>}
+              {uploadedFiles.length === 0 && <p className="p-4 text-sm text-muted-foreground">No files uploaded yet.</p>}
               {uploadedFiles.map((file) => (
                 <div key={file.id} className="flex items-center justify-between border-b border-border px-4 py-2 text-sm last:border-0">
                   <span>{file.filename}</span>
-                  <span className="text-xs text-muted">
+                  <span className="text-xs text-muted-foreground">
                     {file.type} · {formatBytes(file.size)}
                   </span>
                 </div>
               ))}
             </div>
-            <p className="text-xs text-muted">
+            <p className="text-xs text-muted-foreground">
               Once processing starts, the real ThermalMesh engine will validate, align, project, and blend your data into an
               interactive 3D model.
             </p>

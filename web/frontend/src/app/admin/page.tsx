@@ -3,9 +3,10 @@
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Activity, CheckCircle2, Database, FolderKanban, Users, XCircle } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingState } from "@/components/ui/states";
 import { useAdminOverview } from "@/hooks/use-admin";
+import { CHART_ACCENT, CHART_AXIS_TICK, CHART_GRID_STROKE, CHART_TOOLTIP_STYLE } from "@/lib/chart-theme";
 import { formatDateTime } from "@/lib/utils";
 
 export default function AdminOverviewPage() {
@@ -25,8 +26,8 @@ export default function AdminOverviewPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Admin Overview</h1>
-        <p className="mt-1 text-muted">System-wide status across every user and project.</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Admin Overview</h1>
+        <p className="mt-1 text-muted-foreground">System-wide status across every user and project.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
@@ -34,8 +35,8 @@ export default function AdminOverviewPage() {
           <Card key={tile.label}>
             <CardContent className="p-4">
               <tile.icon className="mb-2 h-4 w-4 text-brand" />
-              <p className="font-mono text-xl font-semibold">{tile.value}</p>
-              <p className="text-xs text-muted">{tile.label}</p>
+              <p className="tabular-data text-xl font-semibold text-foreground">{tile.value}</p>
+              <p className="text-xs text-muted-foreground">{tile.label}</p>
             </CardContent>
           </Card>
         ))}
@@ -43,30 +44,34 @@ export default function AdminOverviewPage() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
-          <CardContent className="p-6">
-            <p className="mb-4 text-sm font-medium">Projects created (last 14 days)</p>
+          <CardHeader>
+            <CardTitle>Projects created (last 14 days)</CardTitle>
+          </CardHeader>
+          <CardContent>
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={data.projects_over_time}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#8b95a7" }} tickFormatter={(v) => v.slice(5)} />
-                <YAxis tick={{ fontSize: 10, fill: "#8b95a7" }} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: "#0c111d", border: "1px solid rgba(255,255,255,0.1)", fontSize: 12 }} />
-                <Line type="monotone" dataKey="count" stroke="#22d3ee" strokeWidth={2} dot={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID_STROKE} vertical={false} />
+                <XAxis dataKey="date" tick={CHART_AXIS_TICK} tickFormatter={(v) => v.slice(5)} axisLine={{ stroke: CHART_GRID_STROKE }} tickLine={false} />
+                <YAxis tick={CHART_AXIS_TICK} allowDecimals={false} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={CHART_TOOLTIP_STYLE} cursor={{ stroke: CHART_GRID_STROKE }} />
+                <Line type="monotone" dataKey="count" stroke={CHART_ACCENT} strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <p className="mb-4 text-sm font-medium">Processing jobs by status</p>
+          <CardHeader>
+            <CardTitle>Processing jobs by status</CardTitle>
+          </CardHeader>
+          <CardContent>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={data.jobs_by_status}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                <XAxis dataKey="status" tick={{ fontSize: 10, fill: "#8b95a7" }} />
-                <YAxis tick={{ fontSize: 10, fill: "#8b95a7" }} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: "#0c111d", border: "1px solid rgba(255,255,255,0.1)", fontSize: 12 }} />
-                <Bar dataKey="count" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID_STROKE} vertical={false} />
+                <XAxis dataKey="status" tick={CHART_AXIS_TICK} axisLine={{ stroke: CHART_GRID_STROKE }} tickLine={false} />
+                <YAxis tick={CHART_AXIS_TICK} allowDecimals={false} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={CHART_TOOLTIP_STYLE} cursor={{ fill: "rgba(15,23,42,0.03)" }} />
+                <Bar dataKey="count" fill={CHART_ACCENT} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -74,16 +79,18 @@ export default function AdminOverviewPage() {
       </div>
 
       <Card>
-        <CardContent className="p-6">
-          <p className="mb-4 text-sm font-medium">Recent activity</p>
+        <CardHeader>
+          <CardTitle>Recent activity</CardTitle>
+        </CardHeader>
+        <CardContent>
           <ul className="space-y-3">
             {data.recent_activity.map((log) => (
               <li key={log.id} className="flex items-center justify-between border-b border-border pb-3 text-sm last:border-0 last:pb-0">
                 <div>
-                  <span className="font-medium">{log.user_email ?? "System"}</span>{" "}
-                  <span className="text-muted">{log.action.replaceAll("_", " ").toLowerCase()}</span>
+                  <span className="font-medium text-foreground">{log.user_email ?? "System"}</span>{" "}
+                  <span className="text-muted-foreground">{log.action.replaceAll("_", " ").toLowerCase()}</span>
                 </div>
-                <span className="text-xs text-muted">{formatDateTime(log.created_at)}</span>
+                <span className="text-xs text-muted-foreground">{formatDateTime(log.created_at)}</span>
               </li>
             ))}
           </ul>

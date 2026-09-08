@@ -10,8 +10,8 @@ export default function AdminSettingsPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">System Settings</h1>
-        <p className="mt-1 text-muted">Processing defaults, storage configuration, and upload limits.</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">System Settings</h1>
+        <p className="mt-1 text-muted-foreground">Processing defaults, storage configuration, and upload limits.</p>
       </div>
 
       <Card>
@@ -25,16 +25,16 @@ export default function AdminSettingsPage() {
           ) : (
             <dl className="space-y-3 text-sm">
               <div className="flex justify-between border-b border-border pb-2">
-                <dt className="text-muted">Max upload size</dt>
-                <dd className="font-mono">{data.max_upload_mb as number} MB</dd>
+                <dt className="text-muted-foreground">Max upload size</dt>
+                <dd className="tabular-data">{data.max_upload_mb as number} MB</dd>
               </div>
               <div className="flex justify-between border-b border-border pb-2">
-                <dt className="text-muted">Storage path</dt>
-                <dd className="max-w-xs truncate font-mono text-xs">{data.storage_path as string}</dd>
+                <dt className="text-muted-foreground">Storage path</dt>
+                <dd className="max-w-xs truncate tabular-data text-xs">{data.storage_path as string}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-muted">CORS origins</dt>
-                <dd className="font-mono text-xs">{(data.cors_origins as string[]).join(", ")}</dd>
+                <dt className="text-muted-foreground">CORS origins</dt>
+                <dd className="tabular-data text-xs">{(data.cors_origins as string[]).join(", ")}</dd>
               </div>
             </dl>
           )}

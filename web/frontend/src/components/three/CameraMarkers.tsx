@@ -6,9 +6,9 @@ import * as THREE from "three";
 import type { Camera } from "@/types";
 
 const POSE_COLOR: Record<Camera["pose_source"], string> = {
-  PROVIDED: "#22c55e",
-  ESTIMATED: "#eab308",
-  REFINED: "#22d3ee",
+  PROVIDED: "#15803d",
+  ESTIMATED: "#b45309",
+  REFINED: "#1d4ed8",
 };
 
 interface CameraMarkersProps {
@@ -56,7 +56,7 @@ export function CameraMarkers({ cameras, selectedId, onSelect, showFrustums, vis
             {showFrustums && <Line points={[position, target]} color={color} lineWidth={1} transparent opacity={0.6} />}
             {isSelected && (
               <Html position={position} distanceFactor={8} zIndexRange={[20, 0]}>
-                <div className="pointer-events-none -translate-y-8 whitespace-nowrap rounded-md border border-white/10 bg-black/70 px-2 py-1 font-mono text-[10px] text-white/90 backdrop-blur-sm">
+                <div className="pointer-events-none -translate-y-8 whitespace-nowrap rounded-md border border-border bg-surface px-2 py-1 tabular-data text-[10px] text-foreground shadow-card">
                   {camera.camera_key}
                 </div>
               </Html>

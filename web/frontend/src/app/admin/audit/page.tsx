@@ -12,14 +12,14 @@ export default function AdminAuditPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Audit Logs</h1>
-        <p className="mt-1 text-muted">Every recorded action across the platform.</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Audit Logs</h1>
+        <p className="mt-1 text-muted-foreground">Every recorded action across the platform.</p>
       </div>
 
       {isLoading ? (
         <LoadingState label="Loading audit logs..." />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border">
+        <div className="overflow-hidden rounded-lg border border-border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -33,11 +33,11 @@ export default function AdminAuditPage() {
               {logs.map((log) => (
                 <TableRow key={log.id}>
                   <TableCell>{log.user_email ?? "System"}</TableCell>
-                  <TableCell className="font-mono text-xs">{log.action}</TableCell>
+                  <TableCell className="tabular-data text-xs">{log.action}</TableCell>
                   <TableCell>
                     <Badge tone={log.status === "SUCCESS" ? "success" : "danger"}>{log.status}</Badge>
                   </TableCell>
-                  <TableCell className="text-muted">{formatDateTime(log.created_at)}</TableCell>
+                  <TableCell className="text-muted-foreground">{formatDateTime(log.created_at)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

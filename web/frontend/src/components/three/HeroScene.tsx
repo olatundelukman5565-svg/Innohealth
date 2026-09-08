@@ -1,28 +1,18 @@
 "use client";
 
+import { Grid, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { RotateCcw } from "lucide-react";
 import { Suspense, useState } from "react";
 
-import { AnnotationLabel } from "./AnnotationLabel";
-import { HeroMeshObject } from "./HeroMeshObject";
-import { ParticleField } from "./ParticleField";
+import { ThermalInspectionObject } from "./ThermalInspectionObject";
 import { WebGLFallback } from "./WebGLFallback";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useWebGLSupport } from "@/hooks/use-webgl";
 import { formatTemperature } from "@/lib/utils";
 
-const LABELS: { position: [number, number, number]; label: string; value?: string; delay: number }[] = [
-  { position: [1.9, 1.1, 0.4], label: "Thermal Field", delay: 200 },
-  { position: [-2.0, -0.6, 0.6], label: "3D Geometry", delay: 400 },
-  { position: [0.2, -1.7, 1.2], label: "Temperature", value: "72.4°C", delay: 600 },
-  { position: [1.6, -0.9, -1.3], label: "Camera 04", delay: 800 },
-];
-
 export function HeroScene() {
-  const reducedMotion = useReducedMotion();
   const webglSupported = useWebGLSupport();
-  const [hotspot, setHotspot] = useState<{ temperature: number } | null>(null);
+  const [reading, setReading] = useState<{ temperature: number } | null>(null);
   const [resetKey, setResetKey] = useState(0);
 
   if (webglSupported === false) {
@@ -31,27 +21,31 @@ export function HeroScene() {
 
   return (
     <div className="relative h-full w-full">
-      <Canvas
-        key={resetKey}
-        dpr={[1, 1.75]}
-        camera={{ position: [0, 0, 6], fov: 42 }}
-        gl={{ antialias: true, alpha: true }}
-      >
-        <ambientLight intensity={0.5} />
-        <pointLight position={[5, 4, 5]} intensity={40} color="#67e8f9" />
-        <pointLight position={[-5, -3, -4]} intensity={20} color="#a78bfa" />
+      <Canvas key={resetKey} dpr={[1, 1.75]} camera={{ position: [2.6, 1.4, 3.4], fov: 40 }} gl={{ antialias: true }}>
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[4, 6, 3]} intensity={1.1} />
+        <directionalLight position={[-4, -2, -3]} intensity={0.3} />
         <Suspense fallback={null}>
-          <HeroMeshObject reducedMotion={reducedMotion} onHotspot={setHotspot} />
-          {!reducedMotion && <ParticleField />}
-          {LABELS.map((item) => (
-            <AnnotationLabel key={item.label} {...item} />
-          ))}
+          <ThermalInspectionObject onSelectPoint={setReading} />
+          <Grid
+            position={[0, -1.6, 0]}
+            args={[10, 10]}
+            cellSize={0.5}
+            cellThickness={0.5}
+            cellColor="#d5dae1"
+            sectionSize={2}
+            sectionThickness={0.8}
+            sectionColor="#b7bfc9"
+            fadeDistance={9}
+            infiniteGrid
+          />
         </Suspense>
+        <OrbitControls enableDamping dampingFactor={0.1} enablePan={false} minDistance={2.5} maxDistance={6} autoRotate={false} />
       </Canvas>
 
-      {hotspot && (
-        <div className="pointer-events-none absolute left-1/2 top-4 -translate-x-1/2 rounded-full border border-brand/30 bg-black/60 px-4 py-1.5 font-mono text-xs text-brand backdrop-blur-sm animate-fade-up">
-          Reading: {formatTemperature(hotspot.temperature)}
+      {reading && (
+        <div className="pointer-events-none absolute left-4 top-4 rounded-md border border-border bg-surface px-3 py-1.5 tabular-data text-xs text-foreground shadow-card">
+          Reading: <span className="font-semibold text-brand">{formatTemperature(reading.temperature)}</span>
         </div>
       )}
 
@@ -59,12 +53,13 @@ export function HeroScene() {
         type="button"
         onClick={() => {
           setResetKey((k) => k + 1);
-          setHotspot(null);
+          setReading(null);
         }}
-        className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-white/70 backdrop-blur-sm transition-colors hover:text-white"
+        className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-muted-foreground shadow-card transition-colors hover:text-foreground"
       >
         <RotateCcw className="h-3 w-3" /> Reset view
       </button>
+      <p className="pointer-events-none absolute bottom-4 left-4 text-[11px] text-muted-foreground">Drag to rotate &middot; click surface to inspect</p>
     </div>
   );
 }

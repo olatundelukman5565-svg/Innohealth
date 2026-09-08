@@ -3,18 +3,49 @@
 @tailwind utilities;
 
 :root {
-  --background: 222 47% 4%;
-  --surface: 222 40% 7%;
-  --surface-elevated: 222 35% 10%;
-  --border: 222 20% 18%;
-  --foreground: 210 40% 98%;
-  --muted: 215 16% 57%;
-  --brand: 189 94% 55%;
-  --brand-foreground: 222 47% 4%;
-  --brand-secondary: 258 90% 66%;
-  --success: 142 71% 45%;
-  --warning: 38 92% 50%;
-  --danger: 0 84% 60%;
+  /* Page canvas + surfaces */
+  --background: 210 20% 98%;
+  --surface: 0 0% 100%;
+  --surface-secondary: 210 20% 96%;
+  --border: 220 13% 90%;
+  --input: 220 13% 88%;
+  --foreground: 222 47% 11%;
+  --muted: 210 20% 96%;
+  --muted-foreground: 215 16% 46%;
+
+  /* Single controlled technical accent */
+  --brand: 217 91% 40%;
+  --brand-foreground: 0 0% 100%;
+  --brand-muted: 217 91% 95%;
+
+  /* Status */
+  --success: 142 64% 30%;
+  --success-bg: 142 64% 95%;
+  --warning: 32 90% 38%;
+  --warning-bg: 38 92% 95%;
+  --danger: 0 65% 45%;
+  --danger-bg: 0 72% 96%;
+  --info: 217 91% 40%;
+  --info-bg: 217 91% 96%;
+
+  /* Sidebar (dark slate, independent of content theme) */
+  --sidebar-background: 222 44% 10%;
+  --sidebar-foreground: 210 20% 83%;
+  --sidebar-border: 222 30% 18%;
+  --sidebar-muted: 215 18% 58%;
+  --sidebar-accent: 217 91% 55%;
+  --sidebar-accent-bg: 217 60% 20%;
+
+  --radius: 0.5rem;
+
+  /* Thermal scientific colormap -- reserved strictly for real temperature data */
+  --thermal-1: 217 91% 50%;
+  --thermal-2: 189 85% 48%;
+  --thermal-3: 158 64% 42%;
+  --thermal-4: 84 60% 45%;
+  --thermal-5: 45 93% 47%;
+  --thermal-6: 25 90% 50%;
+  --thermal-7: 0 72% 51%;
 }
 
 * {
@@ -22,7 +53,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -31,24 +62,7 @@ body {
 }
 
 ::selection {
-  background: hsl(var(--brand) / 0.3);
-}
-
-.glass-panel {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-  border: 1px solid hsl(var(--border));
-  backdrop-filter: blur(16px);
-}
-
-.text-gradient {
-  background-image: linear-gradient(135deg, hsl(var(--brand)), hsl(var(--brand-secondary)));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.bg-noise {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M0 0h1v1H0zM30 30h1v1h-1z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background: hsl(var(--brand) / 0.15);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -69,4 +83,13 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: hsl(var(--border));
   border-radius: 999px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Numeric / coordinate / measurement values -- tabular figures, monospace */
+.tabular-data {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
 }

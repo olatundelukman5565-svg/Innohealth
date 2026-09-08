@@ -25,38 +25,44 @@ interface ViewerToolbarProps {
 
 export function ViewerToolbar({ mode, onModeChange, showCameras, onToggleCameras, showFrustums, onToggleFrustums, onReset }: ViewerToolbarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-black/40 p-1.5 backdrop-blur-sm">
+    <div className="flex flex-wrap items-center gap-1 rounded-md border border-border bg-surface p-1 shadow-card">
       {MODES.map((item) => (
         <button
           key={item.value}
           type="button"
           onClick={() => onModeChange(item.value)}
           className={cn(
-            "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-white/60 transition-colors hover:text-white",
-            mode === item.value && "bg-white/[0.1] text-white"
+            "flex items-center gap-1.5 rounded-sm px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground",
+            mode === item.value && "bg-brand-muted text-brand"
           )}
         >
           {item.icon}
           {item.label}
         </button>
       ))}
-      <div className="mx-1 h-5 w-px bg-white/10" />
+      <div className="mx-1 h-5 w-px bg-border" />
       <button
         type="button"
         onClick={onToggleCameras}
-        className={cn("rounded-lg px-2.5 py-1.5 text-xs font-medium text-white/60 hover:text-white", showCameras && "bg-white/[0.1] text-white")}
+        className={cn(
+          "rounded-sm px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground",
+          showCameras && "bg-brand-muted text-brand"
+        )}
       >
         Cameras
       </button>
       <button
         type="button"
         onClick={onToggleFrustums}
-        className={cn("rounded-lg px-2.5 py-1.5 text-xs font-medium text-white/60 hover:text-white", showFrustums && "bg-white/[0.1] text-white")}
+        className={cn(
+          "rounded-sm px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground",
+          showFrustums && "bg-brand-muted text-brand"
+        )}
       >
         Frustums
       </button>
-      <div className="mx-1 h-5 w-px bg-white/10" />
-      <button type="button" onClick={onReset} className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-white/60 hover:text-white">
+      <div className="mx-1 h-5 w-px bg-border" />
+      <button type="button" onClick={onReset} className="flex items-center gap-1.5 rounded-sm px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground">
         <RotateCcw className="h-3.5 w-3.5" /> Reset
       </button>
     </div>

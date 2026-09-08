@@ -7,7 +7,7 @@ export default function PrivacyPage() {
   return (
     <>
       <PublicNav />
-      <main className="mx-auto max-w-3xl px-6 py-20 text-muted">
+      <main className="mx-auto max-w-3xl px-6 py-20 text-muted-foreground">
         <h1 className="mb-6 text-3xl font-semibold text-foreground">Privacy Policy</h1>
         <p>
           This is a demonstration platform. Data uploaded here -- meshes, thermal files, and camera metadata -- is processed

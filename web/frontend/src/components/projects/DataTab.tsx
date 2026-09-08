@@ -26,7 +26,7 @@ export function DataTab({ projectId, results }: { projectId: string; results?: P
   };
 
   if (!results) {
-    return <p className="text-sm text-muted">Numerical data will be available once processing completes.</p>;
+    return <p className="text-sm text-muted-foreground">Numerical data will be available once processing completes.</p>;
   }
 
   return (
@@ -37,12 +37,12 @@ export function DataTab({ projectId, results }: { projectId: string; results?: P
           <Card key={file.artifact}>
             <CardContent className="flex items-center justify-between gap-4 p-5">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground">
                   <Icon className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className="font-mono text-sm font-medium">{file.label}</p>
-                  <p className="text-xs text-muted">{file.description}</p>
+                  <p className="tabular-data text-sm font-medium text-foreground">{file.label}</p>
+                  <p className="text-xs text-muted-foreground">{file.description}</p>
                 </div>
               </div>
               <Button size="sm" variant="secondary" onClick={() => handleDownload(file.artifact, file.filename)}>

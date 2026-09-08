@@ -52,14 +52,14 @@ export function TemperatureTab({ projectId }: { projectId: string }) {
         >
           Apply Filter
         </Button>
-        {data && <p className="ml-auto text-xs text-muted">{data.total.toLocaleString()} vertices</p>}
+        {data && <p className="ml-auto text-xs text-muted-foreground">{data.total.toLocaleString()} vertices</p>}
       </div>
 
       {isLoading || !data ? (
         <LoadingState label="Loading temperature data..." />
       ) : (
         <>
-          <div className="overflow-hidden rounded-2xl border border-border">
+          <div className="overflow-hidden rounded-lg border border-border">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -75,20 +75,20 @@ export function TemperatureTab({ projectId }: { projectId: string }) {
               <TableBody>
                 {data.rows.map((row) => (
                   <TableRow key={row.vertex_id}>
-                    <TableCell className="font-mono">{row.vertex_id}</TableCell>
-                    <TableCell className="font-mono">{row.x.toFixed(3)}</TableCell>
-                    <TableCell className="font-mono">{row.y.toFixed(3)}</TableCell>
-                    <TableCell className="font-mono">{row.z.toFixed(3)}</TableCell>
-                    <TableCell className="font-mono">{formatTemperature(row.temperature, 2)}</TableCell>
-                    <TableCell className="font-mono">{(row.confidence * 100).toFixed(0)}%</TableCell>
-                    <TableCell className="font-mono">{row.observations}</TableCell>
+                    <TableCell className="tabular-data">{row.vertex_id}</TableCell>
+                    <TableCell className="tabular-data">{row.x.toFixed(3)}</TableCell>
+                    <TableCell className="tabular-data">{row.y.toFixed(3)}</TableCell>
+                    <TableCell className="tabular-data">{row.z.toFixed(3)}</TableCell>
+                    <TableCell className="tabular-data">{formatTemperature(row.temperature, 2)}</TableCell>
+                    <TableCell className="tabular-data">{(row.confidence * 100).toFixed(0)}%</TableCell>
+                    <TableCell className="tabular-data">{row.observations}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <p className="text-muted">
+            <p className="text-muted-foreground">
               Page {page} of {totalPages}
             </p>
             <div className="flex gap-2">

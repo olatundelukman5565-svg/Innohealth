@@ -20,14 +20,14 @@ export function PublicNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/5 bg-background/70 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-border bg-surface">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <Link href="/">
           <Logo />
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
           {LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="text-sm text-muted transition-colors hover:text-foreground">
+            <Link key={link.href} href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               {link.label}
             </Link>
           ))}
@@ -45,10 +45,10 @@ export function PublicNav() {
         </button>
       </div>
       {open && (
-        <div className="border-t border-white/5 px-6 py-4 md:hidden">
+        <div className="border-t border-border px-6 py-4 md:hidden">
           <nav className="flex flex-col gap-3">
             {LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="text-sm text-muted hover:text-foreground" onClick={() => setOpen(false)}>
+              <Link key={link.href} href={link.href} className="text-sm text-muted-foreground hover:text-foreground" onClick={() => setOpen(false)}>
                 {link.label}
               </Link>
             ))}

@@ -40,7 +40,7 @@ export function ReportsTab({ reports }: { reports: Report[] }) {
           <Card key={report.id}>
             <CardContent className="space-y-3 p-5">
               <p className="font-medium">{REPORT_LABEL[report.type]}</p>
-              <p className="text-xs text-muted">Generated {formatDateTime(report.generated_at)}</p>
+              <p className="text-xs text-muted-foreground">Generated {formatDateTime(report.generated_at)}</p>
               <div className="flex gap-2">
                 <Button size="sm" variant="secondary" onClick={() => setOpen(report)}>
                   <Eye className="h-3.5 w-3.5" /> View
@@ -61,7 +61,7 @@ export function ReportsTab({ reports }: { reports: Report[] }) {
               <DialogHeader>
                 <DialogTitle>{REPORT_LABEL[open.type]}</DialogTitle>
               </DialogHeader>
-              <pre className="custom-scrollbar max-h-[60vh] overflow-auto rounded-lg bg-black/40 p-4 text-xs text-white/80">
+              <pre className="custom-scrollbar max-h-[60vh] overflow-auto rounded-md border border-border bg-surface-secondary p-4 text-xs text-foreground">
                 {JSON.stringify(open.summary, null, 2)}
               </pre>
             </>

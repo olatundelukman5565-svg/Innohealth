@@ -23,8 +23,8 @@ export default function TechnologyPage() {
         />
         <PipelineSection />
         <section id="docs" className="mx-auto max-w-3xl px-6 py-16 text-center">
-          <h2 className="text-2xl font-semibold">Built on an open, documented engine</h2>
-          <p className="mt-4 text-muted">
+          <h2 className="text-2xl font-semibold text-foreground">Built on an open, documented engine</h2>
+          <p className="mt-4 text-muted-foreground">
             The processing engine behind this platform is a standalone Python pipeline with its own architecture, alignment,
             camera model, and output-format documentation -- available to engineering teams evaluating the platform in depth.
           </p>

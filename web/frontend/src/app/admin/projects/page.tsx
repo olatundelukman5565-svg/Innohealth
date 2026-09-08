@@ -21,8 +21,8 @@ export default function AdminProjectsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Projects</h1>
-        <p className="mt-1 text-muted">Every project across all users.</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Projects</h1>
+        <p className="mt-1 text-muted-foreground">Every project across all users.</p>
       </div>
 
       <div className="flex flex-wrap gap-3">
@@ -45,7 +45,7 @@ export default function AdminProjectsPage() {
       {isLoading ? (
         <LoadingState label="Loading projects..." />
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-border">
+        <div className="overflow-hidden rounded-lg border border-border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -60,14 +60,14 @@ export default function AdminProjectsPage() {
               {projects.map((project) => (
                 <TableRow key={project.id}>
                   <TableCell>{project.name}</TableCell>
-                  <TableCell className="text-muted">{project.owner_email}</TableCell>
+                  <TableCell className="text-muted-foreground">{project.owner_email}</TableCell>
                   <TableCell>
                     <Badge tone={PROJECT_STATUS_META[project.status].tone === "neutral" ? "neutral" : (PROJECT_STATUS_META[project.status].tone as any)}>
                       {PROJECT_STATUS_META[project.status].label}
                     </Badge>
                   </TableCell>
                   <TableCell>{project.is_demo ? <Badge tone="info">Demo</Badge> : "Real"}</TableCell>
-                  <TableCell className="text-muted">{formatDateTime(project.updated_at)}</TableCell>
+                  <TableCell className="text-muted-foreground">{formatDateTime(project.updated_at)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

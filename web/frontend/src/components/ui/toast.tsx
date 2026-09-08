@@ -48,7 +48,7 @@ export function Toaster() {
             duration={5000}
             onOpenChange={(open) => !open && dismiss(item.id)}
             className={cn(
-              "glass-panel pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl p-4 shadow-panel data-[state=open]:animate-fade-up",
+              "pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-lg border border-border bg-surface p-4 shadow-popover data-[state=open]:animate-slide-down",
               item.tone === "success" && "border-success/30",
               item.tone === "danger" && "border-danger/30"
             )}
@@ -63,9 +63,9 @@ export function Toaster() {
             />
             <div className="flex-1">
               <ToastPrimitive.Title className="text-sm font-medium">{item.title}</ToastPrimitive.Title>
-              {item.description && <ToastPrimitive.Description className="mt-1 text-xs text-muted">{item.description}</ToastPrimitive.Description>}
+              {item.description && <ToastPrimitive.Description className="mt-1 text-xs text-muted-foreground">{item.description}</ToastPrimitive.Description>}
             </div>
-            <ToastPrimitive.Close className="text-muted hover:text-foreground">
+            <ToastPrimitive.Close className="text-muted-foreground hover:text-foreground">
               <X className="h-3.5 w-3.5" />
             </ToastPrimitive.Close>
           </ToastPrimitive.Root>

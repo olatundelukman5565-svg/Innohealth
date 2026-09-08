@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Cpu, Database, GitBranch, Globe2, ShieldCheck, Sparkles } from "lucide-react";
 
 const FEATURES = [
@@ -40,27 +37,20 @@ export function FeatureGrid() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <div className="mb-14 max-w-2xl">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand">Why Innohealth ThermalMesh</p>
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Built for scientific rigor, designed like modern software</h2>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-brand">Why Innohealth ThermalMesh</p>
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">Built for scientific rigor, designed like modern software</h2>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {FEATURES.map((feature, index) => {
+        {FEATURES.map((feature) => {
           const Icon = feature.icon;
           return (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.06 }}
-              className="glass-panel rounded-2xl p-6 transition-colors hover:border-white/20"
-            >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg border border-brand/30 bg-brand/10 text-brand">
+            <div key={feature.title} className="rounded-lg border border-border bg-surface p-6 shadow-card transition-colors hover:border-brand/30">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-md border border-brand/20 bg-brand-muted text-brand">
                 <Icon className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-semibold">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{feature.description}</p>
-            </motion.div>
+              <h3 className="text-base font-semibold text-foreground">{feature.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
+            </div>
           );
         })}
       </div>
